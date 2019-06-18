@@ -1,0 +1,7 @@
+[flake8]
+max-line-length=120
+tee=True
+exclude=
+    */__init__.py,
+    */migrations/*
+    manage.py
