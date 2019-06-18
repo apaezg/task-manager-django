@@ -27,6 +27,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+PROJECT_APPS = [
+    'simple_tasks',
+]
+
+INSTALLED_APPS += PROJECT_APPS
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -37,7 +43,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'simple-task-manager-django.urls'
+ROOT_URLCONF = 'simple_task_manager_django.urls'
 
 TEMPLATES = [
     {
@@ -55,7 +61,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'simple-task-manager-django.wsgi.application'
+WSGI_APPLICATION = 'simple_task_manager_django.wsgi.application'
 
 
 # Database
