@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Tasks</h1>
+
+<a href="{% url 'task_create' %}">New</a>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Status</th>
+    <th>Assigned to</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for task in object_list %}
+  <tr>
+    <td>{{ task.id }}</td>
+    <td>{{ task.get_status_display }}</td>
+    <td>{{ task.assigned_to.username|default:"not assigned" }}</td>
+    <td>
+      <a href="{% url 'task_detail' task.id %}">Details</a>
+      {% if task.can_be_updated %}<a href="{% url 'task_update' task.id %}">Edit</a>{% endif %}
+      {% if request.user.is_staff %}<a href="{% url 'task_archive' task.id %}">Archive</a>{% endif %}
+    </td>
+  </tr>
+
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Task Details</h1>
+
+<p>Id: {{object.id}}</p>
+<p>Status: {{object.get_status_display}}</p>
+<p>Assigned to: {{object.assigned_to.username|default:"not assigned"}}</p>
+<p>Created: {{object.created_by.username }} @ {{ object.created|date}}</p>
+<p>Modified: {{object.modified_by.username }} @ {{ object.modified|date:"Y/m/d H:i"}}</p>
+<a href="{% url 'task_update' task.id %}">Edit</a> | <a href="{% url 'task_list' %}">Back to list</a>
+{% endblock %}

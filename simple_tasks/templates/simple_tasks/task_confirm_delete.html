@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Archive</h1>
+<form method="post">
+  {% csrf_token %}
+  Are you sure you want to archive this task?
+  <input type="submit" value="Submit"/>
+</form>
+{% endblock %}
