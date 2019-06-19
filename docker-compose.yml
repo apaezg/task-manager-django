@@ -12,3 +12,12 @@ services:
       - "8000:8000"
     depends_on:
       - db
+  application:
+    build: .
+    entrypoint: "/bin/bash -c"
+    volumes:
+      - .:/code
+    ports:
+      - "8000"
+    depends_on:
+      - db
