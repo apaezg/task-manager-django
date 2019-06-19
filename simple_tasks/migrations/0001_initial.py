@@ -20,8 +20,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('status', models.CharField(choices=[('new', 'New'), ('inprogress', 'In progress'), ('completed', 'Completed'), ('archived', 'Archived')], default='new', max_length=10)),
-                ('created', models.DateTimeField(blank=True, default=datetime.datetime.now, editable=False)),
-                ('modified', models.DateTimeField(blank=True, default=datetime.datetime.now, editable=False)),
+                ('created', models.DateTimeField(blank=True, default=django.utils.timezone.now, editable=False)),
+                ('modified', models.DateTimeField(blank=True, default=django.utils.timezone.now, editable=False)),
                 ('assigned_to', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL)),
                 ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL)),
                 ('modified_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL)),

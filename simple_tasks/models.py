@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -20,8 +20,8 @@ class Task(models.Model):
     )
     STATUS_CHOICES = STATUS_ACTIVE_CHOICES + STATUS_CLOSED_CHOICES
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=NEW_STATUS)
-    created = models.DateTimeField(editable=False, default=datetime.now, blank=True)
-    modified = models.DateTimeField(editable=False, default=datetime.now, blank=True)
+    created = models.DateTimeField(editable=False, default=timezone.now, blank=True)
+    modified = models.DateTimeField(editable=False, default=timezone.now, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="+")
     modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="+")
     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name="+", blank=True, null=True)
@@ -34,7 +34,7 @@ class Task(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        self.modified = datetime.now()
+        self.modified = timezone.now()
         super(Task, self).save(force_insert, force_update, using, update_fields)
 
     def delete(self):
