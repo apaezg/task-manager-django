@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
 ]
 
 PROJECT_APPS = [
@@ -118,3 +119,5 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = 'task_list'
 LOGOUT_REDIRECT_URL = 'task_list'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

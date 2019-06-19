@@ -3,7 +3,7 @@
 <h1>Archive</h1>
 <form method="post">
   {% csrf_token %}
-  Are you sure you want to archive this task?
-  <input type="submit" value="Submit"/>
+  <p>Are you sure you want to archive this task?</p>
+  <button type="submit" class="btn btn-success">Submit</button>
 </form>
 {% endblock %}

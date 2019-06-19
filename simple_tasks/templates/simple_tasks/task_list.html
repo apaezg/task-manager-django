@@ -2,8 +2,7 @@
 {% block content %}
 <h1>Tasks</h1>
 
-<a href="{% url 'task_create' %}">New</a>
-<table>
+<table class="table">
   <thead>
   <tr>
     <th>ID</th>
@@ -18,13 +17,17 @@
     <td>{{ task.get_status_display }}</td>
     <td>{{ task.assigned_to.username|default:"not assigned" }}</td>
     <td>
-      <a href="{% url 'task_detail' task.id %}">Details</a>
-      {% if task.can_be_updated %}<a href="{% url 'task_update' task.id %}">Edit</a>{% endif %}
-      {% if request.user.is_staff %}<a href="{% url 'task_archive' task.id %}">Archive</a>{% endif %}
+      <a href="{% url 'task_detail' task.id %}" class="btn btn-primary btn-sm">Details</a>
+      {% if task.can_be_updated %}<a href="{% url 'task_update' task.id %}" class="btn btn-primary btn-sm">Edit</a>{% endif %}
+      {% if request.user.is_staff %}<a href="{% url 'task_archive' task.id %}" class="btn btn-primary btn-sm">Archive</a>{% endif %}
     </td>
   </tr>
 
   {% endfor %}
   </tbody>
 </table>
+
+<div>
+  <a href="{% url 'task_create' %}" class="btn btn-primary">New</a>
+</div>
 {% endblock %}
