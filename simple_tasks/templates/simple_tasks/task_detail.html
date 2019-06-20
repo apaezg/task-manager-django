@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load comments %}
+
 {% block content %}
 <h1>Task Details</h1>
 
@@ -13,4 +15,20 @@
     <a href="{% url 'task_list' %}" class="btn btn-warning">Back</a>
   </li>
 </ul>
+
+{% get_comment_count for object as comment_count %}
+<p>This task has {{ comment_count }} comment{{ comment_count|pluralize }}.</p>
+{% render_comment_list for object %}
+{% get_comment_form for object as form %}
+<table>
+  <form action="{% comment_form_target %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <tr>
+      <td colspan="2">
+        <input type="submit" name="submit" value="Send" class="btn btn-success">
+      </td>
+    </tr>
+  </form>
+</table>
 {% endblock %}
