@@ -1,5 +1,11 @@
+default_language_version:
+  python: python3
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v1.2.3
     hooks:
-    - id: flake8
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: name-tests-test
+        args: [--django]
+      - id: flake8

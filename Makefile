@@ -54,7 +54,6 @@ clean:
 
 .PHONY: tests
 tests: ##@main Run automatic tests
-tests: args ?= ''
 tests:
 	${DC} up -d application
-	${DC} run --rm application "python manage.py test"
+	${DC} run --rm application "coverage run --source='.' manage.py test; coverage report"

@@ -33,7 +33,7 @@ class TaskUpdate(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         object = super(TaskUpdate, self).get_object(queryset)
-        if object and object.status == Task.ARCHIVED_STATUS:
+        if object and not object.can_be_updated():
             raise PermissionDenied
         return object
 
