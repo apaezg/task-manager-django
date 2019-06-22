@@ -65,8 +65,9 @@ class TaskListTest(TestCase):
         response = TaskUpdate.as_view()(request, pk=self.task.pk)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Task.objects.get(pk=self.task.pk).assigned_to, self.regular_user)
-        self.assertEqual(Task.objects.get(pk=self.task.pk).status, Task.COMPLETED_STATUS)
+        self.task.refresh_from_db()
+        self.assertEqual(self.task.assigned_to, self.regular_user)
+        self.assertEqual(self.task.status, Task.COMPLETED_STATUS)
         self.assertEqual(response.url, reverse('task_detail', kwargs={'pk': self.task.pk}))
 
     def test_user_can_update(self):
@@ -78,8 +79,9 @@ class TaskListTest(TestCase):
         response = TaskUpdate.as_view()(request, pk=self.task.pk)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Task.objects.get(pk=self.task.pk).assigned_to, self.regular_user)
-        self.assertEqual(Task.objects.get(pk=self.task.pk).status, Task.IN_PROGRESS_STATUS)
+        self.task.refresh_from_db()
+        self.assertEqual(self.task.assigned_to, self.regular_user)
+        self.assertEqual(self.task.status, Task.IN_PROGRESS_STATUS)
         self.assertEqual(response.url, reverse('task_detail', kwargs={'pk': self.task.pk}))
 
     def test_cant_archive(self):
@@ -95,8 +97,9 @@ class TaskListTest(TestCase):
         self.assertIn('form', response.context_data)
         self.assertIn('status', response.context_data['form'].errors)
         self.assertEqual(self.task, response.context_data['form'].instance)
-        self.assertEqual(Task.objects.get(pk=self.task.pk).assigned_to, self.admin_user)
-        self.assertEqual(Task.objects.get(pk=self.task.pk).status, Task.NEW_STATUS)
+        self.task.refresh_from_db()
+        self.assertEqual(self.task.assigned_to, self.admin_user)
+        self.assertEqual(self.task.status, Task.NEW_STATUS)
 
     def test_cant_access_archived(self):
         self.task.status = Task.ARCHIVED_STATUS
@@ -108,8 +111,9 @@ class TaskListTest(TestCase):
         with self.assertRaises(PermissionDenied):
             TaskUpdate.as_view()(request, pk=self.task.pk)
 
-        self.assertEqual(Task.objects.get(pk=self.task.pk).assigned_to, self.admin_user)
-        self.assertEqual(Task.objects.get(pk=self.task.pk).status, Task.ARCHIVED_STATUS)
+        self.task.refresh_from_db()
+        self.assertEqual(self.task.assigned_to, self.admin_user)
+        self.assertEqual(self.task.status, Task.ARCHIVED_STATUS)
 
     def test_cant_update_archived(self):
         self.task.status = Task.ARCHIVED_STATUS
@@ -122,5 +126,6 @@ class TaskListTest(TestCase):
         with self.assertRaises(PermissionDenied):
             TaskUpdate.as_view()(request, pk=self.task.pk)
 
-        self.assertEqual(Task.objects.get(pk=self.task.pk).assigned_to, self.admin_user)
-        self.assertEqual(Task.objects.get(pk=self.task.pk).status, Task.ARCHIVED_STATUS)
+        self.task.refresh_from_db()
+        self.assertEqual(self.task.assigned_to, self.admin_user)
+        self.assertEqual(self.task.status, Task.ARCHIVED_STATUS)

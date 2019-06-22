@@ -58,7 +58,8 @@ class TaskListTest(TestCase):
         response = TaskArchive.as_view()(request, pk=self.task.pk)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Task.objects.get(pk=self.task.pk).status, Task.ARCHIVED_STATUS)
+        self.task.refresh_from_db()
+        self.assertEqual(self.task.status, Task.ARCHIVED_STATUS)
         self.assertEqual(response.url, reverse('task_list'))
 
     def test_user_cant_archive(self):
