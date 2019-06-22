@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h1>Really remove this comment?</h1>
+  <form action="." method="post">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{% url 'task_detail' comment.content_object.pk %}"/>
+    <input type="submit" name="submit" value="Remove" class="btn btn-danger">
+    <a href="{% url 'task_detail' comment.content_object.pk %}" class="btn btn-warning">Back</a>
+  </form>
+
+{% endblock %}
