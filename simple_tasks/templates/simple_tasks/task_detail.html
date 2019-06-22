@@ -2,13 +2,14 @@
 {% load comments %}
 
 {% block content %}
+<div class="container">
 <h1>Task Details</h1>
 
 <ul class="list-group">
   <li class="list-group-item">Id: {{object.id}}</li>
   <li class="list-group-item">Status: {{object.get_status_display}}</li>
   <li class="list-group-item">Assigned to: {{object.assigned_to.username|default:"not assigned"}}</li>
-  <li class="list-group-item">Created: {{object.created_by.username }} @ {{ object.created|date}}</li>
+  <li class="list-group-item">Created: {{object.created_by.username }} @ {{ object.created|date:"Y/m/d H:i"}}</li>
   <li class="list-group-item">Modified: {{object.modified_by.username }} @ {{ object.modified|date:"Y/m/d H:i"}}</li>
   <li class="list-group-item">
     <a href="{% url 'task_update' task.id %}" class="btn btn-primary">Edit</a>
@@ -16,19 +17,54 @@
   </li>
 </ul>
 
+<hr>
+</div>
+<div class="container">
+  <h3>Comments:</h3>
+</div>
+<div class="container">
 {% get_comment_count for object as comment_count %}
 <p>This task has {{ comment_count }} comment{{ comment_count|pluralize }}.</p>
-{% render_comment_list for object %}
+<hr>
+</div>
+{% get_comment_list for object as comment_list %}
+{% for comment in comment_list %}
+<div class="container">
+  <div class="col-10">
+    <p class="text-muted">{{ comment.name }} @ {{ comment.submit_date|date:"Y/m/d H:i" }}</p>
+    <p>{{ comment.comment }}</p>
+  </div>
+  {% if perms.django_comments.can_moderate and request.user.is_staff %}
+  <div class="col-2">
+    <a href="{% url 'comments-delete' comment.id %}" class="btn btn-outline-danger btn-sm">Remove</a>
+  </div>
+  {% endif %}
+<hr>
+</div>
+{% endfor %}
+<div class="container">
 {% get_comment_form for object as form %}
 <table>
   <form action="{% comment_form_target %}" method="post">
     {% csrf_token %}
-    {{ form }}
+    <input type="hidden" name="name" class="form-control" id="id_name" value="{{ request.user.username }}">
+    <div id="div_id_comment" class="form-group">
+      <label for="id_comment" class="col-form-label  requiredField">New comment</label>
+      <div class="">
+        {{ form.comment }}
+      </div>
+    </div>
+    {{ form.content_type }}
+    {{ form.object_pk }}
+    {{ form.timestamp }}
+    {{ form.security_hash }}
     <tr>
       <td colspan="2">
         <input type="submit" name="submit" value="Send" class="btn btn-success">
       </td>
     </tr>
+    <input type="hidden" name="next" value="{% url 'task_detail' object.pk %}"/>
   </form>
 </table>
+</div>
 {% endblock %}

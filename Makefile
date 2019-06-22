@@ -52,6 +52,20 @@ clean: ##@main Destroy containers for current project. Will keep database volume
 clean:
 	${DC} down --remove-orphans
 
+.PHONY: migrate-db
+migrate-db: ##@main Apply migrations
+migrate-db:
+	${DC} run --rm application "python manage.py migrate --noinput"
+
+.PHONY: reset-db
+reset-db: ##@main Apply migrations back to intial point and then forward, populating initial data
+reset-db:
+	@${DC} stop db
+	@docker volume rm ${PROJECT}_postgre-volume || true
+	${DC} up -d db; \
+	${DC} run --rm application "python manage.py migrate --noinput"; \
+	${DC} run --rm application "python manage.py loaddata initial_data.yaml"
+
 .PHONY: tests
 tests: ##@main Run automatic tests
 tests:
