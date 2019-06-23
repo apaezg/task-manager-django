@@ -4,3 +4,4 @@ pre-commit==1.17.0
 django-crispy-forms==1.7.1
 coverage==4.5.3
 django-contrib-comments==1.9.1
+ipdb==0.12

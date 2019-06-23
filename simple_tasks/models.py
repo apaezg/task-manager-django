@@ -35,6 +35,7 @@ class Task(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         self.modified = timezone.now()
+
         super(Task, self).save(force_insert, force_update, using, update_fields)
 
     def delete(self):

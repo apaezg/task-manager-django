@@ -10,6 +10,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
+      - /tmp/simple_tasks_manager_emails:/tmp/simple_tasks_manager_emails
     ports:
       - "8000:8000"
     depends_on:

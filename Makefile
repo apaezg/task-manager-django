@@ -47,6 +47,12 @@ shell: ##@main Start a bash shell in a standalone container.
 shell:
 	${DC} run --rm application /bin/bash
 
+.PHONY: attach
+attach: ##@main Attach to running server for debugging. Ctrl+D to detach.
+attach: instance  ?= 1
+attach:
+	docker attach --detach-keys="ctrl-d" ${PROJECT}_web_${instance}
+
 .PHONY: clean
 clean: ##@main Destroy containers for current project. Will keep database volume.
 clean:
