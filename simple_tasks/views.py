@@ -3,6 +3,7 @@ import logging
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -57,8 +58,10 @@ class TaskUpdate(LoginRequiredMixin, UpdateView):
     def notify_changed_task(self, form):
         subject = f'Task {self.object.pk} has changed'
         changes = []
-        for field in form.changed_data:
-            changes.append(f'- {field}: {form.initial[field]} -> {form.data[field]}')
+        if 'status' in form.changed_data:
+            changes.append(f'- Status is now {self.object.get_status_display}')
+        if 'assigned_to' in form.changed_data:
+            changes.append(f'- Assigned is now {self.object.assigned_to.username}')
         str_changes = "\n".join(changes)
         nl = "\n"
         body = f'Task has changed following values:{nl}{str_changes}'
@@ -66,7 +69,7 @@ class TaskUpdate(LoginRequiredMixin, UpdateView):
             subject,
             body,
             'from@example.com',
-            [form.instance.assigned_to.email],
+            [self.object.assigned_to.email],
             fail_silently=False,
         )
 
@@ -77,3 +80,25 @@ class TaskArchive(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         return self.request.user.is_staff
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        self.notify_changed_task()
+        return HttpResponseRedirect(success_url)
+
+    def notify_changed_task(self):
+        subject = f'Task {self.object.pk} has been archived'
+        body = f'Task has been archived by {self.request.user.username}.'
+        send_mail(
+            subject,
+            body,
+            'from@example.com',
+            [self.object.assigned_to.email],
+            fail_silently=False,
+        )
