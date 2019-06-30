@@ -30,7 +30,9 @@ $ make reset-db
 $ make server
 ```
 Go to http://127.0.0.1:8000
+
 Access as admin user with:
 - username: admin, password: adminpass01
+
 Access as regular user with:
 - username: user, password: userpass01
