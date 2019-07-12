@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.contrib.auth.models import AnonymousUser, User
 from django.core.exceptions import PermissionDenied
 from django.test import RequestFactory, TestCase
@@ -56,7 +58,8 @@ class TaskListTest(TestCase):
         self.assertEqual(self.task, response.context_data['form'].instance)
         self.assertIn('form', response.context_data)
 
-    def test_admin_can_update(self):
+    @patch('simple_tasks.views.send_mail')
+    def test_admin_can_update(self, mock_send_mail):
         data = {'assigned_to': self.regular_user.pk, 'status': Task.COMPLETED_STATUS}
         request = self.factory.post(reverse('task_update', kwargs={'pk': self.task.pk}), data)
 
@@ -69,8 +72,10 @@ class TaskListTest(TestCase):
         self.assertEqual(self.task.assigned_to, self.regular_user)
         self.assertEqual(self.task.status, Task.COMPLETED_STATUS)
         self.assertEqual(response.url, reverse('task_detail', kwargs={'pk': self.task.pk}))
+        self.assertEqual(mock_send_mail.call_count, 1)
 
-    def test_user_can_update(self):
+    @patch('simple_tasks.views.send_mail')
+    def test_user_can_update(self, mock_send_mail):
         data = {'assigned_to': self.regular_user.pk, 'status': Task.IN_PROGRESS_STATUS}
         request = self.factory.post(reverse('task_update', kwargs={'pk': self.task.pk}), data)
 
@@ -83,6 +88,7 @@ class TaskListTest(TestCase):
         self.assertEqual(self.task.assigned_to, self.regular_user)
         self.assertEqual(self.task.status, Task.IN_PROGRESS_STATUS)
         self.assertEqual(response.url, reverse('task_detail', kwargs={'pk': self.task.pk}))
+        self.assertEqual(mock_send_mail.call_count, 1)
 
     def test_cant_archive(self):
         data = {'assigned_to': self.regular_user.pk, 'status': Task.ARCHIVED_STATUS}
